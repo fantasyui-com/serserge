@@ -1,0 +1,32 @@
+{
+  "version": "1.0.4",
+  "description": "Automated SCSS Shaping System",
+  "main": "index.js",
+  "scripts": {
+    "pub": "git add .; git commit -m \"New Release\"; npm version minor; git push; npm publish;",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "serserge": "cli.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^5.0.0",
+    "glob": "^7.1.6",
+    "postcss": "^7.0.27",
+    "postcss-import": "^12.0.1",
+    "postcss-scss": "^2.0.0"
+  },
+  "name": "serserge",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fantasyui-com/serserge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fantasyui-com/serserge/issues"
+  },
+  "homepage": "https://github.com/fantasyui-com/serserge#readme"
+}
