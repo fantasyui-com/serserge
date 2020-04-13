@@ -1,7 +1,10 @@
-import chalk from 'chalk';
-import postcss from 'postcss';
 import fs from 'fs';
+import util from 'util';
 
+import chalk from 'chalk';
+
+import postcss from 'postcss';
+import valueParser from 'postcss-value-parser';
 
 
 function rulePath(rule){
@@ -31,8 +34,7 @@ function declPath(decl){
 }
 
 function payload (root, result) {
-    console.log(chalk.green(result.opts.from));
-    walkAll(root,0);
+    walkAll(root,0,result.opts.from);
 }
 
 function identify(node){
@@ -55,17 +57,33 @@ function identify(node){
   return `${chalk.yellow(type)}(${chalk.white(name)})`;
 }
 
-function walkAll(parent, depth){
-  let prefix = '  '.repeat(depth);
-  console.log(prefix + identify(parent));
+function walkAll(parent, depth, file){
+
+  if( ( parent.type === 'atrule') && ( parent.name == 'include') ){
+    const value = valueParser(parent.params);
+    const functionNode = value.nodes[0];
+    if( functionNode && (functionNode.type === 'function') && (functionNode.value === 'deprecate') ){
+        let content = functionNode.nodes.filter(i=>i.value!=',').filter((o,i)=>i<3).map(i=>i.value)
+       //console.log(util.inspect(content, { showHidden: true, depth: null }));
+       console.log(content.join(' '));
+
+      //console.log(value);
+    }
+    //   if(value)
+    // /// found atrule(include deprecate("The `float-left` mixin", "v4.3.0", "v5"))
+    // console.log(file + ": " + identify(parent));
+    // //console.log(parsedValue);
+    // //console.log(parsedValue.nodes);
+    // console.log(util.inspect(parsedValue, { showHidden: true, depth: null }));
+  }
   if(parent.nodes){
     for(let child of parent.nodes){
-      walkAll(child, depth + 1);
+      walkAll(child, depth + 1, file);
     }
   }
 }
 
 
 export default function(){
-  return postcss.plugin('postcss-reconnaissance', function(){return payload});
+  return postcss.plugin('postcss-deprecate', function(){return payload});
 }

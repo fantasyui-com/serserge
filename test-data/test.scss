@@ -1,0 +1,7 @@
+.alert {
+  color: red;
+  @include border-radius($alert-border-radius);
+  .foo {
+    @include bork();
+  }
+}
